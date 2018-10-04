@@ -5,6 +5,7 @@ var $ = require('gulp-load-plugins')();  //可省略require('gulp-xxx')
 // var plumber = require('gulp-plumber');  //監控時，程式出錯不會停止的繼續往下run
 // var postcss = require('gulp-postcss');  //強大的css後處理器
 var autoprefixer = require('autoprefixer'); //為css補上前綴詞
+var mainBowerFiles = require('main-bower-files');
 
 gulp.task('copyHTML', function(){
     return gulp.src('./source/**/*.html')
