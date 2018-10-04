@@ -1,3 +1,3 @@
-let newFunction = () => {
+let newFn = () => {
     console.log('a');
 }

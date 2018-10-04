@@ -43,7 +43,7 @@ gulp.task('babel', () => {
     // presets: ['@babel/env']
     presets: ['es2015']
   }))
-  // .pipe(concat('all.js'))
+  .pipe($.concat('all.js'))
   // .pipe(sourcemaps.write('.'))
   .pipe(gulp.dest('./public/js'));
 });
