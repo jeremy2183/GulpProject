@@ -30,21 +30,23 @@ gulp.task('sass', function () {
 
   return gulp.src('./source/scss/**/*.scss')
     .pipe($.plumber())
+    .pipe($.sourcemaps.init())
     .pipe($.sass().on('error', $.sass.logError))
     //編譯完成 CSS
     .pipe($.postcss(plugins))
+     .pipe($.sourcemaps.write('.'))
     .pipe(gulp.dest('./public/css'));
 });
 
 gulp.task('babel', () => {
   return gulp.src('./source/js/**/*.js')
-  // .pipe(sourcemaps.init())
+  .pipe($.sourcemaps.init())
   .pipe($.babel({
     // presets: ['@babel/env']
     presets: ['es2015']
   }))
   .pipe($.concat('all.js'))
-  // .pipe(sourcemaps.write('.'))
+  .pipe($.sourcemaps.write('.'))
   .pipe(gulp.dest('./public/js'));
 });
 
