@@ -1,0 +1,21 @@
+{
+  "name": "demo_project",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "Jeremy <ayumi2183@gmail.com>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/jeremy2183/GulpProject",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^4.1.3",
+    "jquery": "^3.3.1"
+  }
+}

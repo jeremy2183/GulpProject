@@ -51,10 +51,21 @@ gulp.task('babel', () => {
   .pipe(gulp.dest('./public/js'));
 });
 
+gulp.task('bower', function () {
+  return gulp.src(mainBowerFiles())
+    .pipe(gulp.dest('./.tmp/vendors'))
+});
+
+gulp.task('vendorJs', ['bower'],function(){
+  return gulp.src('./.tmp/vendors/**/*.js')
+    .pipe($.concat('vendors.js'))
+    .pipe(gulp.dest('./public/js'))
+})
+
 gulp.task('watch', function(){
   gulp.watch('./source/scss/**/*.scss', ['sass']); //['sass']:有任何變動將執行sass指令
   gulp.watch('./source/**/*.jade', ['jade']);
   gulp.watch('./source/js/**/*.js', ['babel']);
 });
 
-gulp.task('default',['jade','sass','babel','watch']); //將所以任務移到default，並依序執行
+gulp.task('default',['jade','sass','babel','vendorJs','watch']); //將所以任務移到default，並依序執行
