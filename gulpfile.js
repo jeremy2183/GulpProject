@@ -8,6 +8,7 @@ var autoprefixer = require('autoprefixer'); //為css補上前綴詞
 var mainBowerFiles = require('main-bower-files'); //bower工具
 var browserSync = require('browser-sync').create(); //網頁開發不可或缺的webservice
 var minimist = require('minimist');
+var gulpSequence = require('gulp-sequence');
 
 var envOptions = {
   string: 'env',
@@ -17,6 +18,13 @@ var envOptions = {
 }
 var options = minimist(process.argv.slice(2), envOptions);
 console.log(options)
+
+gulp.task('clean', function () {
+  return gulp.src(['./.tmp','./public'], {
+      read: false
+    })
+    .pipe($.clean());
+});
 
 gulp.task('copyHTML', function(){
     return gulp.src('./source/**/*.html')
@@ -86,7 +94,8 @@ gulp.task('vendorJs', ['bower'],function(){
 gulp.task('browser-sync', function () {
   browserSync.init({
     server: {
-      baseDir: "./public"
+      baseDir: "./public",
+      roloadDebounce: 2000  //重新整理的間隔必須超過2秒
     }
   });
 });
@@ -96,5 +105,7 @@ gulp.task('watch', function(){
   gulp.watch('./source/**/*.jade', ['jade']);
   gulp.watch('./source/js/**/*.js', ['babel']);
 });
+
+gulp.task('build', gulpSequence('clean','jade','sass','babel','vendorJs'))
 
 gulp.task('default',['jade','sass','babel','vendorJs','browser-sync','watch']); //將所以任務移到default，並依序執行
