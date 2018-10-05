@@ -51,7 +51,11 @@ gulp.task('babel', () => {
     presets: ['es2015']
   }))
   .pipe($.concat('all.js'))
-  .pipe($.uglify())
+  .pipe($.uglify({
+    compress: {
+      drop_console: true
+    }
+  }))
   .pipe($.sourcemaps.write('.'))
   .pipe(gulp.dest('./public/js'))
   .pipe(browserSync.stream()); //自動重新整理

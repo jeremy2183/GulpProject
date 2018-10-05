@@ -1,2 +1,2 @@
-"use strict";var newFn=function(){console.log("a")};newFn();var newFn2=function(){console.log("b")};newFn2();
+"use strict";var newFn=function(){};newFn();var newFn2=function(){};newFn2();
 //# sourceMappingURL=all.js.map
