@@ -5,7 +5,8 @@ var $ = require('gulp-load-plugins')();  //可省略require('gulp-xxx')
 // var plumber = require('gulp-plumber');  //監控時，程式出錯不會停止的繼續往下run
 // var postcss = require('gulp-postcss');  //強大的css後處理器
 var autoprefixer = require('autoprefixer'); //為css補上前綴詞
-var mainBowerFiles = require('main-bower-files');
+var mainBowerFiles = require('main-bower-files'); //bower工具
+var browserSync = require('browser-sync').create(); //網頁開發不可或缺的webservice
 
 gulp.task('copyHTML', function(){
     return gulp.src('./source/**/*.html')
@@ -20,6 +21,7 @@ gulp.task('jade', function () {
       pretty: true  //是否美化排版、不壓縮(true)
     }))
     .pipe(gulp.dest('./public/'))
+    .pipe(browserSync.stream()); //自動重新整理
 });
 
 gulp.task('sass', function () {
@@ -36,7 +38,8 @@ gulp.task('sass', function () {
     //編譯完成 CSS
     .pipe($.postcss(plugins))
      .pipe($.sourcemaps.write('.'))
-    .pipe(gulp.dest('./public/css'));
+    .pipe(gulp.dest('./public/css'))
+    .pipe(browserSync.stream());  //自動重新整理
 });
 
 gulp.task('babel', () => {
@@ -48,7 +51,8 @@ gulp.task('babel', () => {
   }))
   .pipe($.concat('all.js'))
   .pipe($.sourcemaps.write('.'))
-  .pipe(gulp.dest('./public/js'));
+  .pipe(gulp.dest('./public/js'))
+  .pipe(browserSync.stream()); //自動重新整理
 });
 
 gulp.task('bower', function () {
@@ -62,10 +66,18 @@ gulp.task('vendorJs', ['bower'],function(){
     .pipe(gulp.dest('./public/js'))
 })
 
+gulp.task('browser-sync', function () {
+  browserSync.init({
+    server: {
+      baseDir: "./public"
+    }
+  });
+});
+
 gulp.task('watch', function(){
   gulp.watch('./source/scss/**/*.scss', ['sass']); //['sass']:有任何變動將執行sass指令
   gulp.watch('./source/**/*.jade', ['jade']);
   gulp.watch('./source/js/**/*.js', ['babel']);
 });
 
-gulp.task('default',['jade','sass','babel','vendorJs','watch']); //將所以任務移到default，並依序執行
+gulp.task('default',['jade','sass','babel','vendorJs','browser-sync','watch']); //將所以任務移到default，並依序執行
