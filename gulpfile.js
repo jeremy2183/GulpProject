@@ -7,6 +7,16 @@ var $ = require('gulp-load-plugins')();  //可省略require('gulp-xxx')
 var autoprefixer = require('autoprefixer'); //為css補上前綴詞
 var mainBowerFiles = require('main-bower-files'); //bower工具
 var browserSync = require('browser-sync').create(); //網頁開發不可或缺的webservice
+var minimist = require('minimist');
+
+var envOptions = {
+  string: 'env',
+  default: {
+    env: 'develop'
+  }
+}
+var options = minimist(process.argv.slice(2), envOptions);
+console.log(options)
 
 gulp.task('copyHTML', function(){
     return gulp.src('./source/**/*.html')
@@ -37,7 +47,7 @@ gulp.task('sass', function () {
     .pipe($.sass().on('error', $.sass.logError))
     //編譯完成 CSS
     .pipe($.postcss(plugins))
-    .pipe($.minifyCss())
+    .pipe($.if(options.env === 'production', $.minifyCss()))
     .pipe($.sourcemaps.write('.'))
     .pipe(gulp.dest('./public/css'))
     .pipe(browserSync.stream());  //自動重新整理
@@ -51,11 +61,11 @@ gulp.task('babel', () => {
     presets: ['es2015']
   }))
   .pipe($.concat('all.js'))
-  .pipe($.uglify({
+  .pipe($.if(options.env === 'production', $.uglify({
     compress: {
       drop_console: true
     }
-  }))
+  })))
   .pipe($.sourcemaps.write('.'))
   .pipe(gulp.dest('./public/js'))
   .pipe(browserSync.stream()); //自動重新整理
@@ -69,7 +79,7 @@ gulp.task('bower', function () {
 gulp.task('vendorJs', ['bower'],function(){
   return gulp.src('./.tmp/vendors/**/*.js')
     .pipe($.concat('vendors.js'))
-    .pipe($.uglify())
+    .pipe($.if(options.env === 'production', $.uglify()))
     .pipe(gulp.dest('./public/js'))
 })
 
