@@ -37,7 +37,8 @@ gulp.task('sass', function () {
     .pipe($.sass().on('error', $.sass.logError))
     //編譯完成 CSS
     .pipe($.postcss(plugins))
-     .pipe($.sourcemaps.write('.'))
+    .pipe($.minifyCss())
+    .pipe($.sourcemaps.write('.'))
     .pipe(gulp.dest('./public/css'))
     .pipe(browserSync.stream());  //自動重新整理
 });
@@ -50,6 +51,7 @@ gulp.task('babel', () => {
     presets: ['es2015']
   }))
   .pipe($.concat('all.js'))
+  .pipe($.uglify())
   .pipe($.sourcemaps.write('.'))
   .pipe(gulp.dest('./public/js'))
   .pipe(browserSync.stream()); //自動重新整理
@@ -63,6 +65,7 @@ gulp.task('bower', function () {
 gulp.task('vendorJs', ['bower'],function(){
   return gulp.src('./.tmp/vendors/**/*.js')
     .pipe($.concat('vendors.js'))
+    .pipe($.uglify())
     .pipe(gulp.dest('./public/js'))
 })
 
