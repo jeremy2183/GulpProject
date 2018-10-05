@@ -86,6 +86,10 @@ gulp.task('bower', function () {
 
 gulp.task('vendorJs', ['bower'],function(){
   return gulp.src('./.tmp/vendors/**/*.js')
+    .pipe($.order([
+      'jquery.js',
+      'bootstrap.js'
+    ]))
     .pipe($.concat('vendors.js'))
     .pipe($.if(options.env === 'production', $.uglify()))
     .pipe(gulp.dest('./public/js'))
